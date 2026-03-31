@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+<style>
+.leaflet-tooltip-right:before, 
+.leaflet-tooltip-left:before, 
+.leaflet-tooltip-top:before, 
+.leaflet-tooltip-bottom:before {
+    display: none !important;
+}
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_16f9e80aee3bcb459b9db4d7d34bf371 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css"/>
+</head>
+<body>
+    
+    
+<div id="sidebar" style="
+    position: fixed; 
+    top: 10px; 
+    left: 10px; 
+    width: 325px; 
+    height: 400px; 
+    background-color: white; 
+    border: 2px solid black; 
+    z-index: 9999; 
+    padding: 10px;
+    overflow-y: auto;">
+    <h4>Lake data</h4>
+    <p>Click a lake marker for information.</p>
+</div>
+    
+            <div class="folium-map" id="map_16f9e80aee3bcb459b9db4d7d34bf371" ></div>
+        
+</body>
+<script>
+    
+    
+function updateSidebar(name, lakeurl, info_breakup, info_formation, breakup_url, breakup_img, formation_url, duration_url) {
+    var content = "<b>Lake name:</b> " + name + "<br>" + 
+                  lakeurl + "<br>" + 
+                  "<b>Ice out data:</b> " + info_breakup + "<br>" + 
+                  "<b>Ice in data:</b> " + info_formation + "<br>";
+
+    content += "<b>Ice out plot:</b> " + breakup_url + "<br>";
+
+    content += `<img src="${breakup_img}" width="300">`;
+
+    content += "<b>Ice in plot:</b> " + formation_url + "<br>";
+
+    content += "<b>Ice duration plot:</b> " + duration_url + "<br>";
+
+    document.getElementById('sidebar').innerHTML = content;
+}
+    
+            var map_16f9e80aee3bcb459b9db4d7d34bf371 = L.map(
+                "map_16f9e80aee3bcb459b9db4d7d34bf371",
+                {
+                    center: [46.5, -95.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6.5,
+  "zoomControl": true,
+  "preferCanvas": false,
+  "zoomSnap": 0.5,
+  "zoomDelta": 2,
+  "keyboard": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0bcef751570e10285bdc2e7d306bc0dc = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_0bcef751570e10285bdc2e7d306bc0dc.addTo(map_16f9e80aee3bcb459b9db4d7d34bf371);
+        
+    
+            var feature_group_02cf7c9e552f08d58dc8f114f6909efd = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_49534cfec069db340b8a3a205c753cc7 = L.marker(
+                [44.874835771838406, -93.62290565813932],
+                {
+  "name": "St. Joe",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_45edbe4323eebb512b67d8178cc539db = L.marker(
+                [44.93007182733628, -93.81950183145791],
+                {
+  "name": "Swede",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_acd46f77927d91430a4fd6ec563449e2 = L.marker(
+                [46.510157361954754, -93.46385202351034],
+                {
+  "name": "Dam",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_992d3b1add2083095c586effe0b5fdbb = L.marker(
+                [46.522959678153136, -93.76361463666204],
+                {
+  "name": "Poor Farm",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_20f28377e54013722eb9ae812d8d69e2 = L.marker(
+                [46.92839819071784, -94.04078682030728],
+                {
+  "name": "Island",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_5e1696e21c80d99227ba94c007bfe600 = L.marker(
+                [46.951431723243715, -94.28018648375834],
+                {
+  "name": "Woman",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_a3d8c9b983fffec3e183225e2c3bfa50 = L.marker(
+                [46.960875460691085, -94.3255648779324],
+                {
+  "name": "McKeown",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_5f56853a089f6dc9d4bc595eb451f83b = L.marker(
+                [46.84479979874751, -94.44859971678648],
+                {
+  "name": "Rainy",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_cb130eda18bf86433f917e0f73d10fc6 = L.marker(
+                [45.35625541496627, -92.84512095780566],
+                {
+  "name": "Kroon",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_6c9f49f3c0428af511e7761e3d6a1f48 = L.marker(
+                [45.62753090275346, -93.07922044494649],
+                {
+  "name": "Goose (South Bay)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_78e72992bc16af135293a6962075866a = L.marker(
+                [48.00151745831723, -90.17299470364075],
+                {
+  "name": "Greenwood",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_bb7300cefd11afcadb6c9768658142c0 = L.marker(
+                [47.84286787372164, -90.72448509238008],
+                {
+  "name": "Lichen",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_d7e2ab12ba539b6553b1abc1f7625871 = L.marker(
+                [46.31644232598344, -93.8853808957907],
+                {
+  "name": "Miller",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_8e1d5b700338ba380ebffe1b5d53a3a1 = L.marker(
+                [46.5305115605233, -93.91089720637264],
+                {
+  "name": "Rabbit (East Portion)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_2933bdf8b7f9a4654b68aed421567773 = L.marker(
+                [46.57417115782841, -94.00846557632924],
+                {
+  "name": "Fool",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_9f85283243788bed140d3fb8629cc140 = L.marker(
+                [46.760193245628734, -94.05761014083184],
+                {
+  "name": "Eagle (West Bay)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_e451df6ebeff75dcfe4aacb7204a8fb4 = L.marker(
+                [46.65758317367247, -94.1864343131831],
+                {
+  "name": "Bass",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_4223aa31a335b6d934713c403911de8b = L.marker(
+                [46.77595106862191, -93.94184666063424],
+                {
+  "name": "Unnamed",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_385e7b01e8effc3f178a5ea88b68097a = L.marker(
+                [44.777905897171244, -93.15843577028843],
+                {
+  "name": "Jensen",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_9b5ea0e26f3518854aa819b11893a1c4 = L.marker(
+                [45.21029104162137, -93.34304571577638],
+                {
+  "name": "Crooked",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_abf89e4c190ec231a03c2f92f855a099 = L.marker(
+                [45.77488905920117, -95.40211012671884],
+                {
+  "name": "Turtle",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_de37d9dff1ae939a9dbdffab785413d1 = L.marker(
+                [45.9907703558806, -95.57635649015845],
+                {
+  "name": "Devils",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_3046303d1df61367b02e77858d4526d8 = L.marker(
+                [44.92103886939285, -93.23612284771411],
+                {
+  "name": "Hiawatha",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_63fe844bb1076f10793c687ba34a7059 = L.marker(
+                [44.90907388621778, -93.4428969004233],
+                {
+  "name": "Minnetoga",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_45e3dafbb1fe1fc2575ee769cc7a8ad2 = L.marker(
+                [44.8951223481798, -93.53436204165683],
+                {
+  "name": "Silver",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_384c3c2dc9257bc82b2ab9111414b099 = L.marker(
+                [44.85651479399474, -93.26235967920312],
+                {
+  "name": "Smith Pond",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_75ab9aaab9971b41a46d2ab36c0b3ea4 = L.marker(
+                [46.836254317592335, -94.84217288271216],
+                {
+  "name": "First Crow Wing",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_fc66bf10f5f4fbe47d43a7fd8dcf4450 = L.marker(
+                [47.06659064507058, -94.89906077680824],
+                {
+  "name": "Mantrap (East Basin)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_35acaa8385ddedd4394ce1cf8f8e14c4 = L.marker(
+                [47.409012442148466, -94.98693831014072],
+                {
+  "name": "Hirts",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_c7321b14aca56b25201a795c676bbda8 = L.marker(
+                [45.541782548513794, -93.2240002373372],
+                {
+  "name": "Florence",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_1db348039440565c51ac7cb6f0fda550 = L.marker(
+                [47.14158949718953, -95.54364211877528],
+                {
+  "name": "Elbow",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_bb4b17582f2ba32ff679381addcfe71c = L.marker(
+                [46.742445980647545, -95.89722131578796],
+                {
+  "name": "Melissa",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_1374f8fecefca20cefb111c5f64f7ec5 = L.marker(
+                [47.70773018817232, -93.06714108890968],
+                {
+  "name": "Beatrice",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_552a032635f62e11813de8f1933f24ed = L.marker(
+                [47.207099277643415, -93.37979607576702],
+                {
+  "name": "Clearwater",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_81be0d1dcfcff5000e00e0f74f47eb57 = L.marker(
+                [47.14462649223313, -93.46513028608834],
+                {
+  "name": "Hale",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_b4aa031816ae470571e55919ab800b53 = L.marker(
+                [47.15286604137854, -93.5121152794904],
+                {
+  "name": "Pokegama (Wendigo)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_de81ceb63fff016f906ed46a778e0bfb = L.marker(
+                [47.5095209831341, -93.66704506011789],
+                {
+  "name": "North Grave",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_98ea04273e1a704a8f370ce47176b052 = L.marker(
+                [47.58497472029564, -93.82038381729424],
+                {
+  "name": "Jessie",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_ce9b1eabaa7be65ea33902ac3ee3c951 = L.marker(
+                [43.845522445722295, -95.0461324513412],
+                {
+  "name": "Fish",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_235d6883f23093644fb165eb88e16906 = L.marker(
+                [45.241934126382105, -94.9510112007144],
+                {
+  "name": "Woodcock",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_4d753b92d3447d11af5fced9f0243596 = L.marker(
+                [45.31291419372712, -94.99804466038547],
+                {
+  "name": "Unnamed (Lais Wetland)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_aa0d4d4081db3862099ac3734b7d8797 = L.marker(
+                [47.68730199200743, -91.45334329201924],
+                {
+  "name": "Grouse",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_000a873087330506c2c698fc155d5737 = L.marker(
+                [49.05488498310947, -94.9573300447826],
+                {
+  "name": "Lake of the Woods (Main)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_82523728300a652c63f112d03550900c = L.marker(
+                [47.57611781583321, -94.534362514659],
+                {
+  "name": "Pimushe",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_2b015b605fd198314db9af08192a5fda = L.marker(
+                [47.44108189025431, -94.89160061114605],
+                {
+  "name": "Carr",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_449e1cc057dc20227454c6fe08d3e9c3 = L.marker(
+                [44.3546577438048, -96.02597603026726],
+                {
+  "name": "Wood",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_47a9e27507fdb6e597d7ff12e2f08b58 = L.marker(
+                [43.66212867720168, -94.46830816723478],
+                {
+  "name": "George",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_743b7adee0e48b1ab8a5117d2a2802c9 = L.marker(
+                [45.19483980487741, -94.2657944444627],
+                {
+  "name": "Mud",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_8ca5a6e0f9863d9b017febd6cf4af6e0 = L.marker(
+                [46.06708313004812, -94.39210581103914],
+                {
+  "name": "Green Prairie Fish",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_7c18c90efd727df86ded6f5b2d4ee5dd = L.marker(
+                [43.99907801375997, -92.502885592488],
+                {
+  "name": "Bamber",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_2bc8e680c15551aae13b8017564c4a47 = L.marker(
+                [46.170774429556865, -95.69189196081962],
+                {
+  "name": "Eagle",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_7513bf549d964e14baeb03670545c3a3 = L.marker(
+                [46.57858149035782, -95.76977875087056],
+                {
+  "name": "Big McDonald",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_317a692bb676494ede6756fce1dd3ab6 = L.marker(
+                [46.27321878844164, -95.96407913105826],
+                {
+  "name": "Wall",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_1eee22708c46c65fc77d232aaa8e9cf6 = L.marker(
+                [46.071918471232955, -92.50466006070243],
+                {
+  "name": "Tamarack",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_3956879ef91e933869b20b6ce2ee1b3a = L.marker(
+                [45.56145914620262, -96.4440438620689],
+                {
+  "name": "East Toqua",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_08afa68782a1e3120679ae6bda2709a5 = L.marker(
+                [44.987501043259, -93.0529843735775],
+                {
+  "name": "Phalen",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_c8b90d102ad9131df76971e393ff1567 = L.marker(
+                [45.04321319586559, -93.17037762099032],
+                {
+  "name": "Johanna",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_2779aae6bd3589680b06cced4fa91600 = L.marker(
+                [44.454422051484734, -93.50149110174716],
+                {
+  "name": "Phelps",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_6dab972938e117f662e4c81daf73ea24 = L.marker(
+                [47.00366089494042, -92.11336629797373],
+                {
+  "name": "Jacobs",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_4abbbac7e367654ae5e39605b7157e5f = L.marker(
+                [47.404639452709155, -92.2386549081285],
+                {
+  "name": "Unnamed (Kumpala)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_ce1b64a12f7ac4c8210387107c3c0979 = L.marker(
+                [47.82319204930568, -92.4127767700003],
+                {
+  "name": "Lost",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_231dda27b6cd1a312780696ba5084ba1 = L.marker(
+                [47.662641586904115, -92.66050466026309],
+                {
+  "name": "Little Sand",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_4de5b1cbf1f98bdd5276bdbe01ae3336 = L.marker(
+                [47.678927289095014, -93.05177830909152],
+                {
+  "name": "Sturgeon",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_629171c4bea8b583c8b1676a6d28fe16 = L.marker(
+                [44.75070073425982, -93.43227962800631],
+                {
+  "name": "Pike",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_bd437dc918b1461ed85ac3892cb01c3b = L.marker(
+                [45.33870209070184, -93.75407498885748],
+                {
+  "name": "Big",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_4af30783ed3ecbc4ae67bfd19024294f = L.marker(
+                [45.55087996121863, -94.3653010037508],
+                {
+  "name": "Kraemer",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_09028a25dee667355ef51677d4c67f7c = L.marker(
+                [45.399287915991714, -94.60440244798065],
+                {
+  "name": "Pirz",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_f70995c363a97de1bb198df5b25c6d38 = L.marker(
+                [45.83437689721809, -94.68007391188868],
+                {
+  "name": "Mound",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_72b07893d45bba1a6093507e7ccdeb66 = L.marker(
+                [45.78820717860169, -94.88475198360742],
+                {
+  "name": "Long (South Bay)",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_8e974b6a2dd8a52620e991eb15c7636f = L.marker(
+                [43.96385815282198, -93.6733123327787],
+                {
+  "name": "Mott",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_49c30cec215e9f0f2a5bb0324e11adac = L.marker(
+                [45.016983284973186, -92.94385317314207],
+                {
+  "name": "Olson",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_055559a57fe737a5c3015197a1a0fc6d = L.marker(
+                [43.974584519261875, -94.64821129488264],
+                {
+  "name": "St. James",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_14d1fc1d25a697648fefe745b76c92c1 = L.marker(
+                [45.2326492650581, -93.9643789893763],
+                {
+  "name": "Maple",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_b7e3349cfeb90cf625b864a7f3e47b48 = L.marker(
+                [45.32197163399045, -94.1022875169247],
+                {
+  "name": "Bass",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            var marker_6b84bb28003fc36babb916d699e38691 = L.marker(
+                [46.498128860066245, -92.67720074310049],
+                {
+  "name": "Bear",
+}
+            ).addTo(feature_group_02cf7c9e552f08d58dc8f114f6909efd);
+        
+    
+            feature_group_02cf7c9e552f08d58dc8f114f6909efd.addTo(map_16f9e80aee3bcb459b9db4d7d34bf371);
+        
+    
+                marker_49534cfec069db340b8a3a205c753cc7.on('click', function(e) {
+                    updateSidebar("St. Joe", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=10001100 target='_blank'>DNR data page</a>", "23 years of observations between 1991 and 2025.", "8 years of observations between 1991 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10001100-St.Joe-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10001100-St.Joe-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10001100-St.Joe-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_45edbe4323eebb512b67d8178cc539db.on('click', function(e) {
+                    updateSidebar("Swede", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=10009500 target='_blank'>DNR data page</a>", "25 years of observations between 1990 and 2025.", "22 years of observations between 1990 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10009500-Swede-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10009500-Swede-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10009500-Swede-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_10009500-Swede-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_acd46f77927d91430a4fd6ec563449e2.on('click', function(e) {
+                    updateSidebar("Dam", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=01009600 target='_blank'>DNR data page</a>", "9 years of observations between 2004 and 2022.", "6 years of observations between 2004 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_01009600-Dam-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_01009600-Dam-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_01009600-Dam-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_01009600-Dam-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_992d3b1add2083095c586effe0b5fdbb.on('click', function(e) {
+                    updateSidebar("Poor Farm", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=01018400 target='_blank'>DNR data page</a>", "1 years of observations between 2021 and 2021.", "0 years of observations between 2021 and 2021.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_20f28377e54013722eb9ae812d8d69e2.on('click', function(e) {
+                    updateSidebar("Island", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=11010200 target='_blank'>DNR data page</a>", "5 years of observations between 2003 and 2022.", "3 years of observations between 2003 and 2022.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_5e1696e21c80d99227ba94c007bfe600.on('click', function(e) {
+                    updateSidebar("Woman", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=11020100 target='_blank'>DNR data page</a>", "24 years of observations between 1978 and 2023.", "21 years of observations between 1978 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11020100-Woman-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11020100-Woman-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11020100-Woman-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11020100-Woman-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_a3d8c9b983fffec3e183225e2c3bfa50.on('click', function(e) {
+                    updateSidebar("McKeown", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=11026100 target='_blank'>DNR data page</a>", "10 years of observations between 1996 and 2025.", "7 years of observations between 1996 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11026100-McKeown-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11026100-McKeown-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11026100-McKeown-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_5f56853a089f6dc9d4bc595eb451f83b.on('click', function(e) {
+                    updateSidebar("Rainy", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=11035600 target='_blank'>DNR data page</a>", "27 years of observations between 1985 and 2023.", "24 years of observations between 1985 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11035600-Rainy-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11035600-Rainy-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11035600-Rainy-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_11035600-Rainy-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_cb130eda18bf86433f917e0f73d10fc6.on('click', function(e) {
+                    updateSidebar("Kroon", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=13001300 target='_blank'>DNR data page</a>", "5 years of observations between 1998 and 2024.", "0 years of observations between 1998 and 2024.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_6c9f49f3c0428af511e7761e3d6a1f48.on('click', function(e) {
+                    updateSidebar("Goose (South Bay)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=13008302 target='_blank'>DNR data page</a>", "22 years of observations between 1989 and 2022.", "4 years of observations between 1989 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_13008302-Goose(SouthBay)-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_13008302-Goose(SouthBay)-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_78e72992bc16af135293a6962075866a.on('click', function(e) {
+                    updateSidebar("Greenwood", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=16007700 target='_blank'>DNR data page</a>", "20 years of observations between 1998 and 2025.", "3 years of observations between 1998 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_16007700-Greenwood-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_16007700-Greenwood-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_bb7300cefd11afcadb6c9768658142c0.on('click', function(e) {
+                    updateSidebar("Lichen", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=16038200 target='_blank'>DNR data page</a>", "2 years of observations between 2014 and 2023.", "0 years of observations between 2014 and 2023.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_d7e2ab12ba539b6553b1abc1f7625871.on('click', function(e) {
+                    updateSidebar("Miller", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18002100 target='_blank'>DNR data page</a>", "17 years of observations between 1993 and 2022.", "4 years of observations between 1993 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_18002100-Miller-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_18002100-Miller-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_8e1d5b700338ba380ebffe1b5d53a3a1.on('click', function(e) {
+                    updateSidebar("Rabbit (East Portion)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18009301 target='_blank'>DNR data page</a>", "5 years of observations between 2018 and 2025.", "3 years of observations between 2018 and 2025.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_2933bdf8b7f9a4654b68aed421567773.on('click', function(e) {
+                    updateSidebar("Fool", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18022400 target='_blank'>DNR data page</a>", "5 years of observations between 2007 and 2024.", "2 years of observations between 2007 and 2024.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_9f85283243788bed140d3fb8629cc140.on('click', function(e) {
+                    updateSidebar("Eagle (West Bay)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18029602 target='_blank'>DNR data page</a>", "2 years of observations between 2015 and 2022.", "0 years of observations between 2015 and 2022.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_e451df6ebeff75dcfe4aacb7204a8fb4.on('click', function(e) {
+                    updateSidebar("Bass", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18035800 target='_blank'>DNR data page</a>", "3 years of observations between 2007 and 2025.", "2 years of observations between 2007 and 2025.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_4223aa31a335b6d934713c403911de8b.on('click', function(e) {
+                    updateSidebar("Unnamed", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=18067500 target='_blank'>DNR data page</a>", "2 years of observations between 2009 and 2010.", "0 years of observations between 2009 and 2010.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_385e7b01e8effc3f178a5ea88b68097a.on('click', function(e) {
+                    updateSidebar("Jensen", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=19007100 target='_blank'>DNR data page</a>", "9 years of observations between 1996 and 2023.", "1 years of observations between 1996 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_19007100-Jensen-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_19007100-Jensen-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_9b5ea0e26f3518854aa819b11893a1c4.on('click', function(e) {
+                    updateSidebar("Crooked", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=02008400 target='_blank'>DNR data page</a>", "12 years of observations between 2002 and 2022.", "10 years of observations between 2002 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_02008400-Crooked-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_02008400-Crooked-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_02008400-Crooked-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_02008400-Crooked-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_abf89e4c190ec231a03c2f92f855a099.on('click', function(e) {
+                    updateSidebar("Turtle", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=21009000 target='_blank'>DNR data page</a>", "2 years of observations between 2015 and 2017.", "0 years of observations between 2015 and 2017.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_de37d9dff1ae939a9dbdffab785413d1.on('click', function(e) {
+                    updateSidebar("Devils", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=21021300 target='_blank'>DNR data page</a>", "3 years of observations between 2004 and 2013.", "0 years of observations between 2004 and 2013.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_3046303d1df61367b02e77858d4526d8.on('click', function(e) {
+                    updateSidebar("Hiawatha", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=27001800 target='_blank'>DNR data page</a>", "9 years of observations between 2014 and 2024.", "6 years of observations between 2014 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_27001800-Hiawatha-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_27001800-Hiawatha-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_27001800-Hiawatha-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_63fe844bb1076f10793c687ba34a7059.on('click', function(e) {
+                    updateSidebar("Minnetoga", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=27008800 target='_blank'>DNR data page</a>", "2 years of observations between 2004 and 2009.", "3 years of observations between 2004 and 2009.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_45e3dafbb1fe1fc2575ee769cc7a8ad2.on('click', function(e) {
+                    updateSidebar("Silver", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=27013600 target='_blank'>DNR data page</a>", "2 years of observations between 2018 and 2023.", "0 years of observations between 2018 and 2023.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_384c3c2dc9257bc82b2ab9111414b099.on('click', function(e) {
+                    updateSidebar("Smith Pond", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=27107800 target='_blank'>DNR data page</a>", "1 years of observations between 2016 and 2016.", "0 years of observations between 2016 and 2016.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_75ab9aaab9971b41a46d2ab36c0b3ea4.on('click', function(e) {
+                    updateSidebar("First Crow Wing", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=29008600 target='_blank'>DNR data page</a>", "5 years of observations between 2002 and 2019.", "5 years of observations between 2002 and 2019.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_fc66bf10f5f4fbe47d43a7fd8dcf4450.on('click', function(e) {
+                    updateSidebar("Mantrap (East Basin)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=29015101 target='_blank'>DNR data page</a>", "24 years of observations between 1986 and 2022.", "23 years of observations between 1986 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_29015101-Mantrap(EastBasin)-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_29015101-Mantrap(EastBasin)-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_29015101-Mantrap(EastBasin)-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_29015101-Mantrap(EastBasin)-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_35acaa8385ddedd4394ce1cf8f8e14c4.on('click', function(e) {
+                    updateSidebar("Hirts", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=29023500 target='_blank'>DNR data page</a>", "1 years of observations between 2005 and 2005.", "0 years of observations between 2005 and 2005.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_c7321b14aca56b25201a795c676bbda8.on('click', function(e) {
+                    updateSidebar("Florence", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=30003500 target='_blank'>DNR data page</a>", "16 years of observations between 2007 and 2025.", "17 years of observations between 2007 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_30003500-Florence-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_30003500-Florence-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_30003500-Florence-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_30003500-Florence-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_1db348039440565c51ac7cb6f0fda550.on('click', function(e) {
+                    updateSidebar("Elbow", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=03015900 target='_blank'>DNR data page</a>", "17 years of observations between 1995 and 2024.", "17 years of observations between 1995 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_03015900-Elbow-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_03015900-Elbow-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_03015900-Elbow-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_03015900-Elbow-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_bb4b17582f2ba32ff679381addcfe71c.on('click', function(e) {
+                    updateSidebar("Melissa", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=03047500 target='_blank'>DNR data page</a>", "5 years of observations between 1983 and 2015.", "2 years of observations between 1983 and 2015.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_1374f8fecefca20cefb111c5f64f7ec5.on('click', function(e) {
+                    updateSidebar("Beatrice", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31005800 target='_blank'>DNR data page</a>", "30 years of observations between 1992 and 2024.", "32 years of observations between 1992 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31005800-Beatrice-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31005800-Beatrice-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31005800-Beatrice-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31005800-Beatrice-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_552a032635f62e11813de8f1933f24ed.on('click', function(e) {
+                    updateSidebar("Clearwater", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31021400 target='_blank'>DNR data page</a>", "44 years of observations between 1978 and 2024.", "18 years of observations between 1978 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31021400-Clearwater-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31021400-Clearwater-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31021400-Clearwater-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31021400-Clearwater-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_81be0d1dcfcff5000e00e0f74f47eb57.on('click', function(e) {
+                    updateSidebar("Hale", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31036100 target='_blank'>DNR data page</a>", "12 years of observations between 1995 and 2018.", "8 years of observations between 1995 and 2018.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31036100-Hale-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31036100-Hale-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31036100-Hale-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_b4aa031816ae470571e55919ab800b53.on('click', function(e) {
+                    updateSidebar("Pokegama (Wendigo)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31053202 target='_blank'>DNR data page</a>", "20 years of observations between 1989 and 2008.", "21 years of observations between 1989 and 2008.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31053202-Pokegama(Wendigo)-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31053202-Pokegama(Wendigo)-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31053202-Pokegama(Wendigo)-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31053202-Pokegama(Wendigo)-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_de81ceb63fff016f906ed46a778e0bfb.on('click', function(e) {
+                    updateSidebar("North Grave", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31062401 target='_blank'>DNR data page</a>", "2 years of observations between 2011 and 2012.", "3 years of observations between 2011 and 2012.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_98ea04273e1a704a8f370ce47176b052.on('click', function(e) {
+                    updateSidebar("Jessie", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=31078600 target='_blank'>DNR data page</a>", "77 years of observations between 1940 and 2024.", "39 years of observations between 1940 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31078600-Jessie-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31078600-Jessie-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31078600-Jessie-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_31078600-Jessie-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_ce9b1eabaa7be65ea33902ac3ee3c951.on('click', function(e) {
+                    updateSidebar("Fish", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=32001800 target='_blank'>DNR data page</a>", "5 years of observations between 1999 and 2019.", "0 years of observations between 1999 and 2019.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_235d6883f23093644fb165eb88e16906.on('click', function(e) {
+                    updateSidebar("Woodcock", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=34014100 target='_blank'>DNR data page</a>", "3 years of observations between 2009 and 2022.", "4 years of observations between 2009 and 2022.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_4d753b92d3447d11af5fced9f0243596.on('click', function(e) {
+                    updateSidebar("Unnamed (Lais Wetland)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=34039000 target='_blank'>DNR data page</a>", "1 years of observations between 2008 and 2008.", "2 years of observations between 2008 and 2008.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_aa0d4d4081db3862099ac3734b7d8797.on('click', function(e) {
+                    updateSidebar("Grouse", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=38055700 target='_blank'>DNR data page</a>", "1 years of observations between 2002 and 2002.", "2 years of observations between 2002 and 2002.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_000a873087330506c2c698fc155d5737.on('click', function(e) {
+                    updateSidebar("Lake of the Woods (Main)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=39000201 target='_blank'>DNR data page</a>", "4 years of observations between 1976 and 1997.", "2 years of observations between 1976 and 1997.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_82523728300a652c63f112d03550900c.on('click', function(e) {
+                    updateSidebar("Pimushe", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=04003200 target='_blank'>DNR data page</a>", "13 years of observations between 2003 and 2018.", "9 years of observations between 2003 and 2018.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_04003200-Pimushe-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_04003200-Pimushe-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_04003200-Pimushe-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_04003200-Pimushe-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_2b015b605fd198314db9af08192a5fda.on('click', function(e) {
+                    updateSidebar("Carr", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=04014100 target='_blank'>DNR data page</a>", "1 years of observations between 2008 and 2008.", "1 years of observations between 2008 and 2008.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_449e1cc057dc20227454c6fe08d3e9c3.on('click', function(e) {
+                    updateSidebar("Wood", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=42007800 target='_blank'>DNR data page</a>", "1 years of observations between 2014 and 2014.", "0 years of observations between 2014 and 2014.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_47a9e27507fdb6e597d7ff12e2f08b58.on('click', function(e) {
+                    updateSidebar("George", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=46002400 target='_blank'>DNR data page</a>", "11 years of observations between 2007 and 2025.", "6 years of observations between 2007 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_46002400-George-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_46002400-George-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_46002400-George-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_46002400-George-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_743b7adee0e48b1ab8a5117d2a2802c9.on('click', function(e) {
+                    updateSidebar("Mud", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=47004000 target='_blank'>DNR data page</a>", "1 years of observations between 2008 and 2008.", "0 years of observations between 2008 and 2008.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_8ca5a6e0f9863d9b017febd6cf4af6e0.on('click', function(e) {
+                    updateSidebar("Green Prairie Fish", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=49003500 target='_blank'>DNR data page</a>", "9 years of observations between 1983 and 2024.", "4 years of observations between 1983 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_49003500-GreenPrairieFish-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_49003500-GreenPrairieFish-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_7c18c90efd727df86ded6f5b2d4ee5dd.on('click', function(e) {
+                    updateSidebar("Bamber", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=55000600 target='_blank'>DNR data page</a>", "3 years of observations between 2005 and 2008.", "2 years of observations between 2005 and 2008.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_2bc8e680c15551aae13b8017564c4a47.on('click', function(e) {
+                    updateSidebar("Eagle", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=56025300 target='_blank'>DNR data page</a>", "15 years of observations between 2001 and 2023.", "10 years of observations between 2001 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56025300-Eagle-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56025300-Eagle-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56025300-Eagle-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56025300-Eagle-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_7513bf549d964e14baeb03670545c3a3.on('click', function(e) {
+                    updateSidebar("Big McDonald", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=56038600 target='_blank'>DNR data page</a>", "1 years of observations between 2017 and 2017.", "0 years of observations between 2017 and 2017.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_317a692bb676494ede6756fce1dd3ab6.on('click', function(e) {
+                    updateSidebar("Wall", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=56065800 target='_blank'>DNR data page</a>", "12 years of observations between 1984 and 2023.", "6 years of observations between 1984 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56065800-Wall-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56065800-Wall-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56065800-Wall-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_56065800-Wall-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_1eee22708c46c65fc77d232aaa8e9cf6.on('click', function(e) {
+                    updateSidebar("Tamarack", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=58002400 target='_blank'>DNR data page</a>", "8 years of observations between 2002 and 2015.", "6 years of observations between 2002 and 2015.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_58002400-Tamarack-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_58002400-Tamarack-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_58002400-Tamarack-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_58002400-Tamarack-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_3956879ef91e933869b20b6ce2ee1b3a.on('click', function(e) {
+                    updateSidebar("East Toqua", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=06013800 target='_blank'>DNR data page</a>", "1 years of observations between 2018 and 2018.", "0 years of observations between 2018 and 2018.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_08afa68782a1e3120679ae6bda2709a5.on('click', function(e) {
+                    updateSidebar("Phalen", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=62001300 target='_blank'>DNR data page</a>", "20 years of observations between 1983 and 2024.", "4 years of observations between 1983 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_62001300-Phalen-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_62001300-Phalen-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_c8b90d102ad9131df76971e393ff1567.on('click', function(e) {
+                    updateSidebar("Johanna", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=62007800 target='_blank'>DNR data page</a>", "8 years of observations between 2000 and 2013.", "6 years of observations between 2000 and 2013.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_62007800-Johanna-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_62007800-Johanna-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_62007800-Johanna-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_2779aae6bd3589680b06cced4fa91600.on('click', function(e) {
+                    updateSidebar("Phelps", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=66006200 target='_blank'>DNR data page</a>", "11 years of observations between 1988 and 2025.", "1 years of observations between 1988 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_66006200-Phelps-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_66006200-Phelps-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_6dab972938e117f662e4c81daf73ea24.on('click', function(e) {
+                    updateSidebar("Jacobs", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=69023100 target='_blank'>DNR data page</a>", "14 years of observations between 2007 and 2024.", "12 years of observations between 2007 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69023100-Jacobs-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69023100-Jacobs-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69023100-Jacobs-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69023100-Jacobs-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_4abbbac7e367654ae5e39605b7157e5f.on('click', function(e) {
+                    updateSidebar("Unnamed (Kumpala)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=69042400 target='_blank'>DNR data page</a>", "2 years of observations between 2009 and 2010.", "5 years of observations between 2009 and 2010.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_ce1b64a12f7ac4c8210387107c3c0979.on('click', function(e) {
+                    updateSidebar("Lost", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=69058100 target='_blank'>DNR data page</a>", "3 years of observations between 2014 and 2019.", "0 years of observations between 2014 and 2019.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_231dda27b6cd1a312780696ba5084ba1.on('click', function(e) {
+                    updateSidebar("Little Sand", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=69073200 target='_blank'>DNR data page</a>", "2 years of observations between 2004 and 2005.", "2 years of observations between 2004 and 2005.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_4de5b1cbf1f98bdd5276bdbe01ae3336.on('click', function(e) {
+                    updateSidebar("Sturgeon", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=69093900 target='_blank'>DNR data page</a>", "14 years of observations between 1999 and 2013.", "0 years of observations between 1999 and 2013.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69093900-Sturgeon-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_69093900-Sturgeon-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_629171c4bea8b583c8b1676a6d28fe16.on('click', function(e) {
+                    updateSidebar("Pike", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=70007600 target='_blank'>DNR data page</a>", "3 years of observations between 2009 and 2017.", "4 years of observations between 2009 and 2017.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_bd437dc918b1461ed85ac3892cb01c3b.on('click', function(e) {
+                    updateSidebar("Big", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=71008200 target='_blank'>DNR data page</a>", "18 years of observations between 1989 and 2024.", "2 years of observations between 1989 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_71008200-Big-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_71008200-Big-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_4af30783ed3ecbc4ae67bfd19024294f.on('click', function(e) {
+                    updateSidebar("Kraemer", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=73006400 target='_blank'>DNR data page</a>", "4 years of observations between 2002 and 2020.", "4 years of observations between 2002 and 2020.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_09028a25dee667355ef51677d4c67f7c.on('click', function(e) {
+                    updateSidebar("Pirz", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=73014400 target='_blank'>DNR data page</a>", "4 years of observations between 2007 and 2018.", "3 years of observations between 2007 and 2018.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_f70995c363a97de1bb198df5b25c6d38.on('click', function(e) {
+                    updateSidebar("Mound", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=77000700 target='_blank'>DNR data page</a>", "36 years of observations between 1982 and 2024.", "32 years of observations between 1982 and 2024.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_77000700-Mound-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_77000700-Mound-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_77000700-Mound-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_77000700-Mound-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_72b07893d45bba1a6093507e7ccdeb66.on('click', function(e) {
+                    updateSidebar("Long (South Bay)", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=77014902 target='_blank'>DNR data page</a>", "2 years of observations between 2019 and 2020.", "1 years of observations between 2019 and 2020.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_8e974b6a2dd8a52620e991eb15c7636f.on('click', function(e) {
+                    updateSidebar("Mott", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=81007600 target='_blank'>DNR data page</a>", "2 years of observations between 2012 and 2015.", "0 years of observations between 2012 and 2015.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_49c30cec215e9f0f2a5bb0324e11adac.on('click', function(e) {
+                    updateSidebar("Olson", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=82010300 target='_blank'>DNR data page</a>", "1 years of observations between 1978 and 1978.", "0 years of observations between 1978 and 1978.",
+                    "Not enough observations", "", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_055559a57fe737a5c3015197a1a0fc6d.on('click', function(e) {
+                    updateSidebar("St. James", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=83004300 target='_blank'>DNR data page</a>", "12 years of observations between 2008 and 2022.", "3 years of observations between 2008 and 2022.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_83004300-St.James-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_83004300-St.James-breakup.png", "Not enough observations", "Not enough observations");
+                });
+            
+    
+                marker_14d1fc1d25a697648fefe745b76c92c1.on('click', function(e) {
+                    updateSidebar("Maple", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=86013400 target='_blank'>DNR data page</a>", "41 years of observations between 1970 and 2015.", "39 years of observations between 1970 and 2015.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86013400-Maple-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86013400-Maple-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86013400-Maple-formation.png target='_blank'>Link</a>", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86013400-Maple-duration.png target='_blank'>Link</a>");
+                });
+            
+    
+                marker_b7e3349cfeb90cf625b864a7f3e47b48.on('click', function(e) {
+                    updateSidebar("Bass", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=86023400 target='_blank'>DNR data page</a>", "15 years of observations between 2002 and 2025.", "8 years of observations between 2002 and 2025.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86023400-Bass-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86023400-Bass-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_86023400-Bass-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+                marker_6b84bb28003fc36babb916d699e38691.on('click', function(e) {
+                    updateSidebar("Bear", "<a href=https://www.dnr.state.mn.us/lakefind/ice.html?id=09003400 target='_blank'>DNR data page</a>", "9 years of observations between 2004 and 2023.", "6 years of observations between 2004 and 2023.",
+                    "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_09003400-Bear-breakup.png target='_blank'>Link</a>", "https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_09003400-Bear-breakup.png", "<a href=https://raw.githubusercontent.com/pottersamf/lakes/refs/heads/main/dow_09003400-Bear-formation.png target='_blank'>Link</a>", "Not enough observations");
+                });
+            
+    
+            var circle_marker_85053250ec86e9fbcfed9479ddae0d52 = L.circleMarker(
+                [45.75, -92.0],
+                {"bubblingMouseEvents": true, "color": "rgba(0,0,0,0)", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "rgba(0,0,0,0)", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_16f9e80aee3bcb459b9db4d7d34bf371);
+        
+    
+            circle_marker_85053250ec86e9fbcfed9479ddae0d52.bindTooltip(
+                `<div style="\n            background-color: transparent; \n            border: none; \n            box-shadow: none;\n            ">
+                     
+         <!-- Title text -->
+        <div style="
+            font-size: 18pt; 
+            font-weight: bold; 
+            font-family: Times New Roman;
+            line-height: 1;
+            # padding-left: 4px;
+            margin-bottom: 10px;
+            color: black;
+            ">
+            Lake ice data browser
+        </div>
+
+        <!-- Body text -->
+            <div style="
+                font-size: 18px; 
+                font-weight: normal; 
+                font-family: Times New Roman;
+                line-height: 1; 
+                color: #555;
+                ">
+                About 1,874 lakes have at least one<br>
+                ice in or ice out observation. 
+            </div>
+        </div>
+        
+                 </div>`,
+                {
+  "permanent": true,
+  "direction": "right",
+  "sticky": false,
+}
+            );
+        
+    
+            var feature_group_02cf7c9e552f08d58dc8f114f6909efdsearchControl = new L.Control.Search({
+                layer: feature_group_02cf7c9e552f08d58dc8f114f6909efd,
+                
+                propertyName: 'name',
+                
+                collapsed: false,
+                textPlaceholder: 'Search',
+                position:'topright',
+            
+                initial: false,
+                
+                hideMarkerOnCollapse: true
+            
+                });
+                feature_group_02cf7c9e552f08d58dc8f114f6909efdsearchControl.on('search:locationfound', function(e) {
+                    feature_group_02cf7c9e552f08d58dc8f114f6909efd.setStyle(function(feature){
+                        return feature.properties.style
+                    })
+                    
+                    if(e.layer._popup)
+                        e.layer.openPopup();
+                })
+                feature_group_02cf7c9e552f08d58dc8f114f6909efdsearchControl.on('search:collapsed', function(e) {
+                        feature_group_02cf7c9e552f08d58dc8f114f6909efd.setStyle(function(feature){
+                            return feature.properties.style
+                    });
+                });
+            map_16f9e80aee3bcb459b9db4d7d34bf371.addControl( feature_group_02cf7c9e552f08d58dc8f114f6909efdsearchControl );
+
+        
+</script>
+</html>
